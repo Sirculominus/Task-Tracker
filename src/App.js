@@ -103,10 +103,10 @@ const App = () => {
   const syncBC = async () => {
     try {
       setLoading(true)
-      const totalTasks = await web3props.tasks.nextTaskId.call()
+      const totalTasks = await web3props.tasks.getTasksAmount()
       var tasksFromBc = []
       var allTasks = []
-      for (let i = 0; i < totalTasks.toNumber(); i++) {
+      for (let i = 1; i <= totalTasks.toNumber(); i++) {
         tasksFromBc[i] = await web3props.tasks.getTask(i);
         allTasks.push({
           id: i, 
@@ -134,10 +134,15 @@ const App = () => {
         {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder}/> : 'No Local Tasks To Show'}
       </div>
       <div className="container">
+        {bcTasks.length > 0 ? <BcTasks bcTasks={bcTasks} onDelete={deleteTask} onToggle={toggleReminder}/> : 'No Blockchain Tasks To Show'}
         <div className="sweet-loading">
-          <ClipLoader  loading={loading}  />
+          {loading ? 
+          <div>
+            <ClipLoader  loading={loading}  /> 
+            Fetching from Blockchain, please wait...
+          </div>
+          : ''}
         </div>
-        { loading===false ? (bcTasks.length > 0 ? <BcTasks bcTasks={bcTasks} onDelete={deleteTask} onToggle={toggleReminder}/> : 'No Blockchain Tasks To Show') : 'Fetching from Blockchain, please wait...'}
       </div>
     </div>
   )

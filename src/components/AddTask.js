@@ -20,6 +20,7 @@ const AddTask = ({ onAdd }) => {
 
         setText('')
         setDay('')
+        setDescription('')
         setReminder(false)
     }
 

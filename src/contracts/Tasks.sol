@@ -3,9 +3,15 @@ pragma solidity >=0.6.0 <0.8.0;
 pragma abicoder v2;
 
 contract Tasks {
-    // Global Tasks
-    mapping(uint256 => Task) public myTasks;
-    uint256 public nextTaskId = 0;
+    // Mapping to tasks
+    mapping(address => mapping(uint256 => Task)) public myTasks;
+    mapping(address => Users) public users;
+
+    struct Users {
+        address userAddress;
+        uint256 tasks;
+        bool isValue;
+    }
 
     struct Task {
         string name;
@@ -17,7 +23,7 @@ contract Tasks {
     // Contract owner
     address public owner;
 
-    constructor() {
+    constructor() public {
         owner = msg.sender;
     }
 
@@ -30,12 +36,27 @@ contract Tasks {
         bool _reminder,
         string memory _description
     ) public {
-        myTasks[nextTaskId] = Task(_name, _date, _reminder, _description);
-        nextTaskId++;
+        uint256 id;
+        if (!users[msg.sender].isValue) {
+            users[msg.sender].isValue = true;
+            users[msg.sender].tasks = 1;
+            id = 1;
+        } else {
+            id = users[msg.sender].tasks;
+        }
+        myTasks[msg.sender][id] = Task(_name, _date, _reminder, _description);
+        users[msg.sender].tasks++;
         emit addTaskEvent();
     }
 
     function getTask(uint256 _id) public view returns (Task memory) {
-        return myTasks[_id];
+        return myTasks[msg.sender][_id];
+    }
+
+    function getTasksAmount() public view returns (uint256) {
+        if (!users[msg.sender].isValue) {
+            return 0;
+        }
+        return users[msg.sender].tasks - 1;
     }
 }
