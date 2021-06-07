@@ -13,6 +13,7 @@ const App = () => {
 
   // For loading spinner
   let [loading, setLoading] = useState(false);
+  let [loadingInTask, setLoadingInTask] = useState([]);
 
   // Initate 
   useEffect(() => {
@@ -113,28 +114,41 @@ const App = () => {
           name: tasksFromBc[i].name, 
           date: tasksFromBc[i].date,
           reminder: tasksFromBc[i].reminder,
-          description: tasksFromBc[i].description
+          description: tasksFromBc[i].description,
+          done: tasksFromBc[i].done
          })
       }
       setBcTasks([...allTasks])
       setLoading(false)
-      console.log(bcTasks)
+      console.table(bcTasks)
     } catch (e) {
       console.log('Error, ', e)
     }
   }
 
-
+  const completeBcTask = async (id) => {
+    console.log('Delete BC task id: ', id)
+    await web3props.tasks.completeTask(id)
+    let loading = []
+    loading[id] = true
+    setLoadingInTask(loading)
+    await web3props.tasks.on("completeTaskEvent", () => {
+      console.log("Got the event")
+      syncBC()
+      loading[id] = false
+      setLoadingInTask(loading)
+    })
+  }
   
   return (
     <div>
       <div className="container">
         <Header onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} onSyncBC = {() => syncBC()} />
         {showAddTask && <AddTask onAdd={addTask} />}
-        {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder}/> : 'No Local Tasks To Show'}
+        {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} /> : 'No Local Tasks To Show'}
       </div>
       <div className="container">
-        {bcTasks.length > 0 ? <BcTasks bcTasks={bcTasks} onDelete={deleteTask} onToggle={toggleReminder}/> : 'No Blockchain Tasks To Show'}
+        {bcTasks.length > 0 ? <BcTasks bcTasks={bcTasks} onComplete={completeBcTask} loadingInTask={loadingInTask}/> : 'No Blockchain Tasks To Show'}
         <div className="sweet-loading">
           {loading ? 
           <div>

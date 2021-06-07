@@ -18,6 +18,7 @@ contract Tasks {
         string date;
         bool reminder;
         string description;
+        bool done;
     }
 
     // Contract owner
@@ -29,6 +30,9 @@ contract Tasks {
 
     // Event addtask
     event addTaskEvent();
+
+    // Event completetask
+    event completeTaskEvent();
 
     function addTask(
         string memory _name,
@@ -44,7 +48,13 @@ contract Tasks {
         } else {
             id = users[msg.sender].tasks;
         }
-        myTasks[msg.sender][id] = Task(_name, _date, _reminder, _description);
+        myTasks[msg.sender][id] = Task(
+            _name,
+            _date,
+            _reminder,
+            _description,
+            false
+        );
         users[msg.sender].tasks++;
         emit addTaskEvent();
     }
@@ -58,5 +68,10 @@ contract Tasks {
             return 0;
         }
         return users[msg.sender].tasks - 1;
+    }
+
+    function completeTask(uint256 _id) public {
+        myTasks[msg.sender][_id].done = true;
+        emit completeTaskEvent();
     }
 }

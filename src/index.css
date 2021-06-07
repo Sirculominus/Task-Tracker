@@ -109,3 +109,11 @@ footer {
   margin-top: 30px;
   text-align: center;
 }
+
+.task-completed {
+  color: green;
+}
+
+.task-not-completed {
+  color: red;
+}
