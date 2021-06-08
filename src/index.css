@@ -17,7 +17,7 @@ body {
   min-height: 300px;
   border: 1px solid steelblue;
   padding: 30px;
-  border-radius: 5px;
+  border-radius: 50px;
 }
 
 .header {
@@ -28,17 +28,27 @@ body {
 }
 
 .btn {
+  font: inherit;
+  background-color: rgb(0, 0, 0);
+  border: 1px solid rgba(164,167,181,1);
+  border-radius: 12rem;
+  width: 100%;
+  -webkit-transition: all 0.1s linear,padding 0s,border 0s;
+  transition: all 0.1s linear,padding 0s,border 0s;
   display: inline-block;
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 15px;
-  font-family: inherit;
+  padding: 0 1rem;
+  line-height: 2.5rem;
+  height: 2.5rem;
+  color: rgb(255, 255, 255);
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding-left: 1rem;
+  padding-right: 2.35rem;
+}
+
+.buttonHeader {
+  width: 6rem;
 }
 
 .btn:focus {
@@ -116,4 +126,25 @@ footer {
 
 .task-not-completed {
   color: red;
+  cursor: pointer;
+}
+
+input {
+  font: inherit;
+  background-color: rgba(255,255,255,1);
+  border: 1px solid rgba(164,167,181,1);
+  border-radius: 12rem;
+  width: 100%;
+  -webkit-transition: all 0.1s linear,padding 0s,border 0s;
+  transition: all 0.1s linear,padding 0s,border 0s;
+  display: inline-block;
+  padding: 0 1rem;
+  line-height: 2.5rem;
+  height: 2.5rem;
+  color: rgba(42,48,57,1);
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding-left: 1rem;
+  padding-right: 2.35rem;
 }
