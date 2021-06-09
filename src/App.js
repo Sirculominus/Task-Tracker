@@ -67,6 +67,7 @@ const App = () => {
   const [tasks, setTasks] = useState([])
 
   const [bcTasks, setBcTasks] = useState([])
+  const [filter, toggleFilter] = useState(true)
   
 
   // Add Task
@@ -78,6 +79,7 @@ const App = () => {
         console.log(web3props.tasks)
         console.log(task)
         await web3props.tasks.addTask(task.text,task.date,task.reminder,task.description)
+        setShowAddTask(false)
         setLoading(true)
         await web3props.tasks.on("addTaskEvent", () => {
           console.log("Got the event")
@@ -143,20 +145,12 @@ const App = () => {
   return (
       <div>
         <div className="container">
-          <Header onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} onSyncBC = {() => syncBC()} />
+          <Header loading={loading} onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} onSyncBC = {() => syncBC()} />
           {showAddTask && <AddTask onAdd={addTask} />}
           {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} /> : 'No Local Tasks To Show'}
         </div>
         <div className="container">
-          {bcTasks.length > 0 ? <BcTasks bcTasks={bcTasks} onComplete={completeBcTask} loadingInTask={loadingInTask}/> : 'No Blockchain Tasks To Show'}
-          <div className="sweet-loading">
-            {loading ? 
-            <div>
-              <ClipLoader  loading={loading}  /> 
-              Fetching from Blockchain, please wait...
-            </div>
-            : ''}
-          </div>
+          {bcTasks.length > 0 ? <BcTasks filter={filter} onFilter={() => {toggleFilter(!filter)}} bcTasks={bcTasks} onComplete={completeBcTask} loadingInTask={loadingInTask}/> : 'No Blockchain Tasks To Show'}
         </div>
       </div>
   )

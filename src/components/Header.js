@@ -1,13 +1,21 @@
 import PropTypes from 'prop-types'
-import Button from './Button'
+//import { Button } from './Button'
+import { Button } from 'react-rainbow-components';
 
-const Header = ({title, onAdd, showAdd, onSyncBC}) => {
+const Header = ({title, onAdd, showAdd, onSyncBC, loading}) => {
 
     return (
         <header className='header'>
             <h1>{title}</h1>
-            <Button color={showAdd ? 'red' : 'green'} text={showAdd ? 'Close' : 'Add'} onClick={onAdd}/>
-            <Button color={'blue'} text={'Sync BC'} onClick={onSyncBC}/>
+            <Button 
+                variant={showAdd ? 'destructive' : 'success'} 
+                label={showAdd ? 'Close' : 'Add'} 
+                onClick={onAdd}/>
+            <Button 
+                isLoading={loading}
+                variant={'brand'} 
+                label={'Sync BC'} 
+                onClick={onSyncBC}/>
         </header>
     )
 }
