@@ -1,25 +1,33 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
-import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
 import { ethers } from "ethers"
 import detectEthereumProvider from '@metamask/detect-provider'
 import Tasksabi from './abis/Tasks.json'
 import BcTasks from './components/BcTasks'
-import ClipLoader from "react-spinners/ClipLoader";
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Calendar from './components/Calendar'
 
 const App = () => {
 
-  // For loading spinner
   let [loading, setLoading] = useState(false);
   let [loadingInTask, setLoadingInTask] = useState([]);
+  const [showAddTask, setShowAddTask] = useState(false)
+  const [tasks, setTasks] = useState([])
+  const [bcTasks, setBcTasks] = useState([])
+  const [filter, toggleFilter] = useState(true)
 
   // Initate 
   useEffect(() => {
-    loadBlockchainData()
+    (async () => {
+      await loadBlockchainData();
+    })()
   }, [])
-
   
   const loadBlockchainData = async () => {
     const provider = await detectEthereumProvider();
@@ -61,15 +69,6 @@ const App = () => {
     tasksAddress: null
   })
   
-
-
-  const [showAddTask, setShowAddTask] = useState(false)
-  const [tasks, setTasks] = useState([])
-
-  const [bcTasks, setBcTasks] = useState([])
-  const [filter, toggleFilter] = useState(true)
-  
-
   // Add Task
   const addTask = async (task) => {
     const id = tasks.length + 1
@@ -88,18 +87,6 @@ const App = () => {
       } catch (e) {
         console.log('Error, add Task: ', e)
       }
-  }
-
-
-
-  // Delete Task
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id))
-  }
-
-  // Toggle Reminder
-  const toggleReminder = (id) => {
-    setTasks(tasks.map((task) => task.id === id ? { ...task, reminder: !task.reminder } : task))
   }
 
   // Sync BC
@@ -143,16 +130,24 @@ const App = () => {
   }
   
   return (
-      <div>
-        <div className="container">
-          <Header loading={loading} onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} onSyncBC = {() => syncBC()} />
-          {showAddTask && <AddTask onAdd={addTask} />}
-          {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} /> : 'No Local Tasks To Show'}
-        </div>
-        <div className="container">
-          {bcTasks.length > 0 ? <BcTasks filter={filter} onFilter={() => {toggleFilter(!filter)}} bcTasks={bcTasks} onComplete={completeBcTask} loadingInTask={loadingInTask}/> : 'No Blockchain Tasks To Show'}
-        </div>
-      </div>
+      <Router>
+          <div className="container">
+            <Header filter={filter} onFilter={() => {toggleFilter(!filter)}} loading={loading} onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} onSyncBC = {() => syncBC()} />
+            {showAddTask && <AddTask onAdd={addTask} />}
+          </div>
+          <Switch>
+            <Route exact path="/">
+              <div className="container">
+                {bcTasks.length > 0 ? <BcTasks filter={filter} onFilter={() => {toggleFilter(!filter)}} bcTasks={bcTasks} onComplete={completeBcTask} loadingInTask={loadingInTask}/> : 'No Blockchain Tasks To Show'}
+              </div>
+            </Route>
+            <Route path="/calendar">
+              <div>
+              <Calendar bcTasks={bcTasks}/>
+              </div>
+            </Route>
+          </Switch>
+      </Router>
   )
 }
 

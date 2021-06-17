@@ -8,13 +8,17 @@ const BcTask = ({ bcTask, onComplete, loadingInTask }) => {
     return (
         <div style={{padding: '0 0 1rem'}}>
             <Card
-                title={bcTask.name}
-                footer={
+                title={
                     <div>
-                        <div style={{width:'14px'}}>
+                        {bcTask.name}
+                        <div style={{width:'14px', position:'absolute', left:'90%',top:'10%' }}>
                             {bcTask.done ? <ImCheckboxChecked data-tip="Task is done" className={'task-completed'} /> : <ImCheckboxUnchecked data-tip="Mark as done" className={'task-not-completed'} onClick={() => { if (window.confirm('Marking the task as done is not reversible.\nOnly confirm if you really are done with your task!')) onComplete(bcTask.id)}} />}
                             <ReactTooltip />
                         </div>
+                    </div>
+                }
+                footer={
+                    <div>
                         <p>
                             {bcTask.date} { loadingInTask[bcTask.id] && <ClipLoader  loading={loadingInTask}  />}
                         </p>
