@@ -1,4 +1,4 @@
-Requires node.js for web server, tuffle for local blockchain and Metamask for web3 connection:
+Requires node.js for web server, Truffle for local blockchain and Metamask for web3 connection:
 
 1. git clone https://github.com/Sirculominus/Task-Tracker.git
 2. cd .\Task-Tracker\
