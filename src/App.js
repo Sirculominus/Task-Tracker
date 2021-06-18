@@ -11,7 +11,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import Calendar from './components/Calendar'
+import MyCalendar from './components/Calendar'
 
 const App = () => {
 
@@ -143,7 +143,7 @@ const App = () => {
             </Route>
             <Route path="/calendar">
               <div>
-              <Calendar bcTasks={bcTasks}/>
+              <MyCalendar bcTasks={bcTasks}/>
               </div>
             </Route>
           </Switch>
